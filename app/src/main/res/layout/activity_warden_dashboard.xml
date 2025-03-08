@@ -1,0 +1,32 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="20dp">
+
+    <Button
+        android:id="@+id/geofence_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Manage Geofence"
+        android:padding="12dp"
+        android:layout_marginBottom="10dp" />
+
+    <Button
+        android:id="@+id/view_attendance_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="View Student Attendance"
+        android:padding="12dp"
+        android:layout_marginBottom="10dp" />
+
+    <Button
+        android:id="@+id/set_time_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Set Attendance Time"
+        android:padding="12dp"
+        android:layout_marginBottom="10dp" />
+
+</LinearLayout>

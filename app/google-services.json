@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "129941121297",
+    "firebase_url": "https://unifence-cc611-default-rtdb.firebaseio.com",
+    "project_id": "unifence-cc611",
+    "storage_bucket": "unifence-cc611.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:129941121297:android:79c21330199ff39f15c4b0",
+        "android_client_info": {
+          "package_name": "com.example.android.geo_loco"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAjn3AJsRKKWcLbDQDhsE3BiUtOEfuVKXY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:129941121297:android:98d955729b23f26215c4b0",
+        "android_client_info": {
+          "package_name": "com.example.myapplication"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAjn3AJsRKKWcLbDQDhsE3BiUtOEfuVKXY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

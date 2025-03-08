@@ -1,0 +1,72 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Required Permissions -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.MyApplication"
+        tools:targetApi="33">
+
+        <!-- Firebase Services -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="@string/default_notification_channel_id" />
+
+        <!-- Startup Screen: Role Selection -->
+        <activity android:name=".RoleSelectionActivity" android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Student Authentication -->
+        <activity android:name=".LoginActivity" android:exported="true" />
+        <activity android:name=".SignUpActivity" android:exported="true" />
+
+        <!-- Warden Authentication -->
+        <activity android:name=".WardenLoginActivity" android:exported="true" />
+        <activity android:name=".WardenSignupActivity" android:exported="true" />
+
+        <!-- Student Dashboard -->
+        <activity android:name=".StudentDashboardActivity" android:exported="true" />
+
+        <!-- Attendance Marking (Restricted Access) -->
+        <activity android:name=".AttendanceMarkingActivity" android:exported="false" />
+
+        <!-- Warden Dashboard (NEW) -->
+        <activity android:name=".WardenDashboardActivity" android:exported="true" />
+
+        <!-- Warden Features -->
+        <activity android:name=".MapsActivity" android:exported="true" />
+<!--        <activity android:name=".AttendanceRecordsActivity" android:exported="true" />-->
+<!--        <activity android:name=".SetAttendanceTimeActivity" android:exported="true" />-->
+
+        <!-- Geofence Broadcast Receiver -->
+        <receiver
+            android:name=".GeofenceBroadcastReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.gms.location.ACTION_GEOFENCE_TRANSITION" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Google Maps API Key -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCCHckTB0z3HiJBvD789Iw5CMfcRBcx3MA" />
+
+    </application>
+</manifest>

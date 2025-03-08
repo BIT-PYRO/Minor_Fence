@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">My Application</string>
+    <string name="title_activity_maps">Maps</string>
+    <string name="title_attendance_marking">Attendance Portal</string>
+
+
+    <!-- Add this missing string -->
+    <string name="default_notification_channel_id">geofence_notifications</string>
+</resources>

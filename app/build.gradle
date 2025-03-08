@@ -1,0 +1,59 @@
+plugins {
+    id 'com.android.application'
+    id 'com.google.gms.google-services' // Firebase Plugin
+}
+
+android {
+    namespace 'com.example.myapplication'
+    compileSdk 34 // ✅ Set to the latest version
+
+    defaultConfig {
+        applicationId "com.example.myapplication"
+        minSdk 23
+        targetSdk 34 // ✅ Required for Google Play
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17 // ✅ Required for latest Firebase
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    buildFeatures {
+        viewBinding true
+    }
+}
+
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'com.google.android.gms:play-services-maps:18.1.0'
+    implementation 'com.google.android.gms:play-services-location:21.3.0'
+
+    // ✅ Firebase BOM (Ensures all Firebase libraries are compatible)
+    implementation platform('com.google.firebase:firebase-bom:33.10.0')
+    implementation 'com.google.firebase:firebase-auth'
+    implementation 'com.google.firebase:firebase-database'
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.android.gms:play-services-auth:20.7.0'
+    implementation 'com.google.firebase:firebase-firestore:24.7.1'
+
+}
+
+apply plugin: 'com.google.gms.google-services'
+dependencies {
+    implementation 'com.google.firebase:firebase-database:20.0.5' // Latest version
+    implementation 'com.google.firebase:firebase-auth:21.0.1'
+    implementation libs.firebase.storage// If using authentication
+}
