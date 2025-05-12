@@ -11,12 +11,12 @@ public class AttendanceRecord {
         // Default constructor required for calls to DataSnapshot.getValue(AttendanceRecord.class)
     }
 
-    public AttendanceRecord(String name, String roomNumber, long timestamp, String deviceId, String hostel) {
+    public AttendanceRecord(String name, String roomNumber, String hostel, String deviceId, long timestamp) {
         this.name = name;
         this.roomNumber = roomNumber;
-        this.timestamp = timestamp;
-        this.deviceId = deviceId;
         this.hostel = hostel;
+        this.deviceId = deviceId;
+        this.timestamp = timestamp;
     }
 
     public String getName() {

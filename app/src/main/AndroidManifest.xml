@@ -1,13 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.myapplication">
 
     <!-- Required Permissions -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -39,19 +41,20 @@
         <activity android:name=".WardenLoginActivity" android:exported="true" />
         <activity android:name=".WardenSignupActivity" android:exported="true" />
 
-        <!-- Student Dashboard -->
+        <!-- Dashboards -->
         <activity android:name=".StudentDashboardActivity" android:exported="true" />
-
-        <!-- Attendance Marking (Restricted Access) -->
-        <activity android:name=".AttendanceMarkingActivity" android:exported="false" />
-
-        <!-- Warden Dashboard (NEW) -->
         <activity android:name=".WardenDashboardActivity" android:exported="true" />
+
+        <!-- Attendance Marking -->
+        <activity android:name=".AttendanceMarkingActivity" android:exported="false" />
+        <activity android:name=".ViewAttendanceActivity" android:exported="true" />
 
         <!-- Warden Features -->
         <activity android:name=".MapsActivity" android:exported="true" />
-<!--        <activity android:name=".AttendanceRecordsActivity" android:exported="true" />-->
-<!--        <activity android:name=".SetAttendanceTimeActivity" android:exported="true" />-->
+        <!-- Uncomment when needed:
+        <activity android:name=".AttendanceRecordsActivity" android:exported="true" />
+        <activity android:name=".SetAttendanceTimeActivity" android:exported="true" />
+        -->
 
         <!-- Geofence Broadcast Receiver -->
         <receiver

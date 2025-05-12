@@ -137,7 +137,7 @@ public class AttendanceMarkingActivity extends AppCompatActivity {
 
     private void markAttendance(String name, String hostel, String roomNumber, String date) {
         long timestamp = System.currentTimeMillis();
-        AttendanceRecord attendanceRecord = new AttendanceRecord(name, roomNumber, timestamp, deviceId, hostel);
+        AttendanceRecord attendanceRecord = new AttendanceRecord(name, roomNumber, hostel, deviceId, timestamp);
 
         firestore.collection("Attendance")
                 .document(date)
