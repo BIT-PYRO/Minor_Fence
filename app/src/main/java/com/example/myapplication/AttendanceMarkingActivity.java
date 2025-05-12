@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.util.Log;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -14,7 +13,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,6 +28,7 @@ import java.util.Locale;
 public class AttendanceMarkingActivity extends AppCompatActivity {
 
     private EditText nameInput;
+    private EditText roomNumberInput;
     private AutoCompleteTextView hostelDropdown;
     private TextView userIdTextView, attendanceStatusTextView;
     private Button markAttendanceButton, logoutButton;
@@ -45,8 +44,10 @@ public class AttendanceMarkingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_attendance_marking);
 
         hostelDropdown = findViewById(R.id.hostel_dropdown);
+        roomNumberInput = findViewById(R.id.room_input);
+
         if (hostelDropdown == null) {
-            Log.e("AttendanceMarkingActivity", "hostelDropdown is NULL");
+            Log.e(TAG, "hostelDropdown is NULL");
             return;
         }
 
@@ -85,11 +86,12 @@ public class AttendanceMarkingActivity extends AppCompatActivity {
         markAttendanceButton.setOnClickListener(v -> {
             String name = nameInput.getText().toString().trim();
             String hostel = hostelDropdown.getText().toString().trim();
+            String roomNumber = roomNumberInput.getText().toString().trim();
 
-            if (name.isEmpty() || hostel.isEmpty()) {
+            if (name.isEmpty() || hostel.isEmpty() || roomNumber.isEmpty()) {
                 Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
             } else {
-                checkAndMarkAttendance(name, hostel);
+                checkAndMarkAttendance(name, hostel, roomNumber);
             }
         });
 
@@ -100,17 +102,15 @@ public class AttendanceMarkingActivity extends AppCompatActivity {
     // Check time before marking attendance
     private boolean isAttendanceAllowed() {
         Calendar calendar = Calendar.getInstance();
-        int hour = calendar.get(Calendar.HOUR_OF_DAY);  // 24-hour format
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
         int minute = calendar.get(Calendar.MINUTE);
 
         Log.d(TAG, "Current Time: " + hour + ":" + minute);
 
-        // Attendance allowed only before 10:30 PM (22:30)
         return hour < 22 || (hour == 22 && minute <= 30);
     }
 
-    private void checkAndMarkAttendance(String name, String hostel) {
-        // Check if it's past 10:30 PM
+    private void checkAndMarkAttendance(String name, String hostel, String roomNumber) {
         if (!isAttendanceAllowed()) {
             Toast.makeText(this, "Attendance portal is closed! Try again tomorrow.", Toast.LENGTH_LONG).show();
             return;
@@ -127,7 +127,7 @@ public class AttendanceMarkingActivity extends AppCompatActivity {
                 attendanceStatusTextView.setText("Attendance Status: Already Marked");
                 Toast.makeText(this, "Attendance already marked today!", Toast.LENGTH_SHORT).show();
             } else {
-                markAttendance(name, hostel, currentDate);
+                markAttendance(name, hostel, roomNumber, currentDate);
             }
         }).addOnFailureListener(e -> {
             Toast.makeText(this, "Error checking attendance: " + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -135,9 +135,9 @@ public class AttendanceMarkingActivity extends AppCompatActivity {
         });
     }
 
-    private void markAttendance(String name, String hostel, String date) {
+    private void markAttendance(String name, String hostel, String roomNumber, String date) {
         long timestamp = System.currentTimeMillis();
-        AttendanceRecord attendanceRecord = new AttendanceRecord(name, hostel, timestamp, deviceId);
+        AttendanceRecord attendanceRecord = new AttendanceRecord(name, roomNumber, timestamp, deviceId, hostel);
 
         firestore.collection("Attendance")
                 .document(date)

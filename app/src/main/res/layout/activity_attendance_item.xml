@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="?android:attr/selectableItemBackground">
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/item_attendance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Attendance Info"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:paddingBottom="10dp" />
+
+    <!-- Name -->
+    <TextView
+        android:id="@+id/name_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Name: "
+        android:textSize="14sp"
+        android:textColor="@android:color/black"
+        android:paddingBottom="4dp" />
+
+    <!-- Room Number -->
+    <TextView
+        android:id="@+id/room_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Room: "
+        android:textSize="14sp"
+        android:textColor="@android:color/black"
+        android:paddingBottom="4dp" />
+
+    <!-- Hostel -->
+    <TextView
+        android:id="@+id/hostel_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hostel: "
+        android:textSize="14sp"
+        android:textColor="@android:color/black"
+        android:paddingBottom="4dp" />
+
+    <!-- Device ID -->
+    <TextView
+        android:id="@+id/device_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Device: "
+        android:textSize="14sp"
+        android:textColor="@android:color/black"
+        android:paddingBottom="4dp" />
+
+    <!-- Time -->
+    <TextView
+        android:id="@+id/time_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Time: "
+        android:textSize="14sp"
+        android:textColor="@android:color/black" />
+</LinearLayout>
