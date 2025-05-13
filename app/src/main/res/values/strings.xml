@@ -2,6 +2,12 @@
     <string name="app_name">My Application</string>
     <string name="title_activity_maps">Maps</string>
     <string name="title_attendance_marking">Attendance Portal</string>
+    <string-array name="hostel_names">
+        <item>GH-1</item>
+        <item>GH-2</item>
+        <item>BH-1</item>
+        <item>BH-2</item>
+    </string-array>
 
 
     <!-- Add this missing string -->
