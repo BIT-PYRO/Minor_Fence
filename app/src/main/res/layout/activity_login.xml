@@ -41,8 +41,8 @@
             android:layout_height="wrap_content"
             android:text="Login"
             android:padding="12dp"
-            android:backgroundTint="@color/purple_500"
-            android:textColor="@android:color/white"
+            android:backgroundTint="@color/white"
+            android:textColor="@android:color/black"
             android:layout_marginBottom="8dp"
             android:background="?attr/selectableItemBackground" />
 

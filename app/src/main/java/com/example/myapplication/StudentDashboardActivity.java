@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.Toast;
@@ -45,9 +46,11 @@ public class StudentDashboardActivity extends AppCompatActivity {
 
         // Handle viewing attendance history
         viewAttendanceButton.setOnClickListener(v -> {
-            Intent intent = new Intent(StudentDashboardActivity.this, ViewAttendanceActivity.class);
+            String attendanceUrl = "https://unifence-cc611.web.app/"; // Replace with your Firebase Hosting URL
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(attendanceUrl));
             startActivity(intent);
         });
+
     }
 
     // Time check method

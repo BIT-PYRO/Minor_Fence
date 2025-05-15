@@ -3,20 +3,20 @@ package com.example.myapplication;
 public class AttendanceRecord {
     private String name;
     private String roomNumber;
-    private long timestamp;
+    private String readableTimestamp; // Changed from long to String
     private String deviceId;
     private String hostel;
 
     public AttendanceRecord() {
-        // Default constructor required for calls to DataSnapshot.getValue(AttendanceRecord.class)
+        // Default constructor required for Firestore deserialization
     }
 
-    public AttendanceRecord(String name, String roomNumber, String hostel, String deviceId, long timestamp) {
+    public AttendanceRecord(String name, String roomNumber, String hostel, String deviceId, String readableTimestamp) {
         this.name = name;
         this.roomNumber = roomNumber;
         this.hostel = hostel;
         this.deviceId = deviceId;
-        this.timestamp = timestamp;
+        this.readableTimestamp = readableTimestamp;
     }
 
     public String getName() {
@@ -27,8 +27,8 @@ public class AttendanceRecord {
         return roomNumber;
     }
 
-    public long getTimestamp() {
-        return timestamp;
+    public String getReadableTimestamp() {
+        return readableTimestamp;
     }
 
     public String getDeviceId() {
@@ -39,5 +39,5 @@ public class AttendanceRecord {
         return hostel;
     }
 
-    // Optionally, add setters if needed
+    // Optional setters if needed
 }

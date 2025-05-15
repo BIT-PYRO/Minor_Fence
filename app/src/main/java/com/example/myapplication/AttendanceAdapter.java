@@ -8,9 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Locale;
 
 public class AttendanceAdapter extends RecyclerView.Adapter<AttendanceAdapter.AttendanceViewHolder> {
 
@@ -35,7 +33,7 @@ public class AttendanceAdapter extends RecyclerView.Adapter<AttendanceAdapter.At
         holder.roomText.setText("Room: " + record.getRoomNumber());
         holder.hostelText.setText("Hostel: " + record.getHostel());
         holder.deviceText.setText("Device: " + record.getDeviceId());
-        holder.timeText.setText("Time: " + formatTimestamp(record.getTimestamp()));
+        holder.timeText.setText("Time: " + record.getReadableTimestamp()); // updated line
     }
 
     @Override
@@ -54,10 +52,5 @@ public class AttendanceAdapter extends RecyclerView.Adapter<AttendanceAdapter.At
             deviceText = itemView.findViewById(R.id.device_text);
             timeText = itemView.findViewById(R.id.time_text);
         }
-    }
-
-    private String formatTimestamp(long timestamp) {
-        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a", Locale.getDefault());
-        return sdf.format(new java.util.Date(timestamp));
     }
 }

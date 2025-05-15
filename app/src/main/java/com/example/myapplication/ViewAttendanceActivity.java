@@ -10,13 +10,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class ViewAttendanceActivity extends AppCompatActivity {
 
@@ -25,7 +26,7 @@ public class ViewAttendanceActivity extends AppCompatActivity {
     private final List<AttendanceRecord> attendanceList = new ArrayList<>();
 
     private FirebaseFirestore firestore;
-    private String currentStudentName;
+    private static final String TAG = "ViewAttendanceActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,57 +35,48 @@ public class ViewAttendanceActivity extends AppCompatActivity {
 
         attendanceRecyclerView = findViewById(R.id.attendance_recycler_view);
         attendanceRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        attendanceAdapter = new AttendanceAdapter(attendanceList);
+        attendanceRecyclerView.setAdapter(attendanceAdapter);
 
         firestore = FirebaseFirestore.getInstance();
+
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
-            currentStudentName = currentUser.getDisplayName();
-            loadAttendanceHistory();
+            String currentUserId = currentUser.getUid();
+            Log.d(TAG, "Logged in UID: " + currentUserId);
+            loadTodayAttendance(currentUserId);
         } else {
             Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void loadAttendanceHistory() {
-        firestore.collection("Attendance")
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful() && task.getResult() != null) {
-                        attendanceList.clear();
-                        for (QueryDocumentSnapshot dateDoc : task.getResult()) {
-                            String date = dateDoc.getId();
-                            String[] hostels = {"BH-1", "BH-2", "GH-1", "GH-2"};
+    private void loadTodayAttendance(String currentUserId) {
+        String todayDate = new SimpleDateFormat("yyyy-mm-dd", Locale.getDefault()).format(new Date());
+        String[] hostels = {"BH-1", "BH-2", "GH-1", "GH-2"};
 
-                            for (String hostel : hostels) {
-                                firestore.collection("Attendance")
-                                        .document(date)
-                                        .collection(hostel)
-                                        .get()
-                                        .addOnSuccessListener(snapshot -> {
-                                            for (DocumentSnapshot doc : snapshot.getDocuments()) {
-                                                String name = doc.getString("name");
+        attendanceList.clear();
 
-                                                if (name != null && name.equalsIgnoreCase(currentStudentName)) {
-                                                    String roomNumber = doc.getString("roomNumber");
-                                                    String deviceId = doc.getString("deviceId");
-                                                    String h = doc.getString("hostel");
-                                                    Long timestamp = doc.getLong("timestamp");
+        for (String hostel : hostels) {
+            firestore.collection("Attendance")
+                    .document(todayDate)
+                    .collection(hostel)
+                    .document(currentUserId)  // Fetch directly using UID
+                    .get()
+                    .addOnSuccessListener(doc -> {
+                        if (doc.exists()) {
+                            String nameField = doc.getString("name");
+                            String roomNumber = doc.getString("roomNumber");
+                            String deviceId = doc.getString("deviceId");
+                            String readableTimestamp = doc.getString("readableTimestamp");
 
-                                                    if (roomNumber != null && deviceId != null && h != null && timestamp != null) {
-                                                        AttendanceRecord record = new AttendanceRecord(name, roomNumber, h, deviceId, timestamp);
-                                                        attendanceList.add(record);
-
-                                                        attendanceAdapter = new AttendanceAdapter(attendanceList);
-                                                        attendanceRecyclerView.setAdapter(attendanceAdapter);
-                                                    }
-                                                }
-                                            }
-                                        });
-                            }
+                            AttendanceRecord record = new AttendanceRecord(
+                                    nameField, roomNumber, hostel, deviceId, readableTimestamp
+                            );
+                            attendanceList.add(record);
+                            attendanceAdapter.notifyDataSetChanged();
                         }
-                    } else {
-                        Toast.makeText(ViewAttendanceActivity.this, "Failed to load attendance records.", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                    })
+                    .addOnFailureListener(e -> Log.e(TAG, "Error fetching data for " + hostel + ": " + e.getMessage()));
+        }
     }
 }

@@ -55,7 +55,6 @@ public class AttendanceMarkingActivity extends AppCompatActivity {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, hostels);
         hostelDropdown.setAdapter(adapter);
 
-        // Initialize Firebase Auth & Firestore
         FirebaseAuth auth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
         FirebaseUser user = auth.getCurrentUser();
@@ -70,10 +69,8 @@ public class AttendanceMarkingActivity extends AppCompatActivity {
             Log.d(TAG, "User logged in with UID: " + userId);
         }
 
-        // Get device ID
         deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
-        // Initialize UI components
         nameInput = findViewById(R.id.name_input);
         markAttendanceButton = findViewById(R.id.mark_attendance_button);
         logoutButton = findViewById(R.id.logout_button);
@@ -82,7 +79,6 @@ public class AttendanceMarkingActivity extends AppCompatActivity {
 
         userIdTextView.setText("User ID: " + userId);
 
-        // Mark Attendance Button Click
         markAttendanceButton.setOnClickListener(v -> {
             String name = nameInput.getText().toString().trim();
             String hostel = hostelDropdown.getText().toString().trim();
@@ -95,11 +91,9 @@ public class AttendanceMarkingActivity extends AppCompatActivity {
             }
         });
 
-        // Logout Button Click
         logoutButton.setOnClickListener(v -> logout());
     }
 
-    // Check time before marking attendance
     private boolean isAttendanceAllowed() {
         Calendar calendar = Calendar.getInstance();
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
@@ -136,8 +130,8 @@ public class AttendanceMarkingActivity extends AppCompatActivity {
     }
 
     private void markAttendance(String name, String hostel, String roomNumber, String date) {
-        long timestamp = System.currentTimeMillis();
-        AttendanceRecord attendanceRecord = new AttendanceRecord(name, roomNumber, hostel, deviceId, timestamp);
+        String readableTimestamp = new SimpleDateFormat("dd MMM yyyy, hh:mm a", Locale.getDefault()).format(new Date());
+        AttendanceRecord attendanceRecord = new AttendanceRecord(name, roomNumber, hostel, deviceId, readableTimestamp);
 
         firestore.collection("Attendance")
                 .document(date)
