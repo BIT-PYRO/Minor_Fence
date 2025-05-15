@@ -2,6 +2,7 @@ package com.example.myapplication;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -39,6 +40,17 @@ public class WardenDashboardActivity extends AppCompatActivity {
         geofenceButton.setOnClickListener(v -> {
             Intent intent = new Intent(WardenDashboardActivity.this, MapsActivity.class);
             startActivity(intent);
+        });
+
+        // 👇 This opens Firestore Attendance page directly
+        viewAttendanceButton.setOnClickListener(v -> {
+            // You can use static date or generate today’s date dynamically
+            String todayDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+
+            String firebaseUrl = "https://console.firebase.google.com/u/0/project/unifence-cc611/firestore/databases/-default-/data/~2FAttendance~2F" + todayDate;
+
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(firebaseUrl));
+            startActivity(browserIntent);
         });
 
         viewAbsenteesButton.setOnClickListener(v -> openDatePicker());
@@ -81,7 +93,6 @@ public class WardenDashboardActivity extends AppCompatActivity {
                             String name = doc.getString("name");
                             String hostel = doc.getString("hostel");
 
-                            // If hostel is not stored, skip hostel filtering
                             if (hostel == null || hostel.equals(selectedHostel)) {
                                 allStudents.put(uid, name);
                             }
@@ -117,7 +128,6 @@ public class WardenDashboardActivity extends AppCompatActivity {
                             }
                         }
 
-                        // 🔥 Save absentees to Firestore
                         for (Map.Entry<String, String> entry : absentMap.entrySet()) {
                             db.collection("absentees")
                                     .document(selectedDate)
@@ -126,7 +136,6 @@ public class WardenDashboardActivity extends AppCompatActivity {
                                     .set(Collections.singletonMap("name", entry.getValue()));
                         }
 
-                        // Navigate to next activity with names
                         Intent intent = new Intent(WardenDashboardActivity.this, AbsenteeListActivity.class);
                         intent.putExtra("selectedDate", selectedDate);
                         intent.putExtra("selectedHostel", selectedHostel);

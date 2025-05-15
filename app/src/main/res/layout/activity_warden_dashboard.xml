@@ -4,12 +4,6 @@
     android:orientation="vertical"
     android:padding="24dp">
 
-    <!-- Spinner for hostel (you can keep or remove based on design) -->
-    <Spinner
-        android:id="@+id/hostel_spinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
     <Button
         android:id="@+id/geofence_button"
         android:layout_width="match_parent"
@@ -34,5 +28,4 @@
         android:layout_height="wrap_content"
         android:text="View Absentees"
         android:layout_marginTop="16dp" />
-
 </LinearLayout>
