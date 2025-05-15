@@ -10,14 +10,10 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
-import java.util.HashMap;
-import java.util.Map;
 
 public class SignUpActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
-    private FirebaseFirestore db;
     private EditText emailInput, passwordInput;
     private Button signUpButton, goToLoginButton;
     private ProgressBar progressBar;
@@ -25,10 +21,9 @@ public class SignUpActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sign_up); // Ensure XML is correct
+        setContentView(R.layout.activity_sign_up); // This must match the XML file name
 
         mAuth = FirebaseAuth.getInstance();
-        db = FirebaseFirestore.getInstance();
 
         emailInput = findViewById(R.id.email_input);
         passwordInput = findViewById(R.id.password_input);
@@ -54,31 +49,15 @@ public class SignUpActivity extends AppCompatActivity {
         }
 
         progressBar.setVisibility(View.VISIBLE);
-
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     progressBar.setVisibility(View.GONE);
                     if (task.isSuccessful()) {
+                        Toast.makeText(SignUpActivity.this, "Registration Successful!", Toast.LENGTH_SHORT).show();
                         FirebaseUser user = mAuth.getCurrentUser();
-
-                        // Set default role to "student"
-                        Map<String, Object> userData = new HashMap<>();
-                        userData.put("role", "student");  // Assign role to "student"
-                        userData.put("name", user.getDisplayName());  // You can fetch this from an EditText field if you have one
-
-                        // Save user role to Firestore
-                        db.collection("users").document(user.getUid())
-                                .set(userData)
-                                .addOnSuccessListener(aVoid -> {
-                                    Toast.makeText(SignUpActivity.this, "Registration Successful!", Toast.LENGTH_SHORT).show();
-                                    user.sendEmailVerification();
-                                    startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
-                                    finish();
-                                })
-                                .addOnFailureListener(e -> {
-                                    Toast.makeText(SignUpActivity.this, "Error saving user data", Toast.LENGTH_SHORT).show();
-                                });
-
+                        user.sendEmailVerification();
+                        startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
+                        finish();
                     } else {
                         Toast.makeText(SignUpActivity.this, "Registration Failed: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                     }
