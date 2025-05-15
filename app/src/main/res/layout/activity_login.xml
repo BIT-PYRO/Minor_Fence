@@ -35,26 +35,26 @@
         android:orientation="vertical">
 
         <!-- Login Button -->
+
+        <!-- Sign Up Button -->
         <Button
             android:id="@+id/login_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Login"
-            android:padding="12dp"
-            android:backgroundTint="@color/white"
-            android:textColor="@android:color/black"
             android:layout_marginBottom="8dp"
-            android:background="?attr/selectableItemBackground" />
+            android:backgroundTint="@color/purple_500"
+            android:padding="12dp"
+            android:text="Login"
+            android:textColor="@android:color/white" />
 
-        <!-- Sign Up Button -->
         <Button
             android:id="@+id/signup_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Create an Account"
             android:padding="12dp"
-            android:textColor="@color/black"
-            android:background="?attr/selectableItemBackground"
+            android:backgroundTint="@color/purple_500"
+            android:textColor="@android:color/white"
             android:layout_marginBottom="16dp" />
     </LinearLayout>
 

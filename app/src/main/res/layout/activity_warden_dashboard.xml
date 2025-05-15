@@ -2,30 +2,43 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="24dp">
+    android:padding="24dp"
+    android:gravity="center">
+
+    <TextView
+        android:layout_width="279dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingBottom="20dp"
+        android:text="Warden Dashboard"
+        android:textSize="30sp"
+        android:textStyle="bold" />
 
     <Button
         android:id="@+id/geofence_button"
-        android:layout_width="match_parent"
+        android:layout_width="234dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:text="Setup Geofence" />
 
     <Button
         android:id="@+id/view_attendance_button"
-        android:layout_width="match_parent"
+        android:layout_width="236dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:text="View Attendance" />
 
     <Button
         android:id="@+id/set_time_button"
-        android:layout_width="match_parent"
+        android:layout_width="241dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:text="Set Attendance Time" />
 
     <Button
         android:id="@+id/view_absentees_button"
-        android:layout_width="match_parent"
+        android:layout_width="242dp"
         android:layout_height="wrap_content"
-        android:text="View Absentees"
-        android:layout_marginTop="16dp" />
+        android:layout_marginTop="16dp"
+        android:text="View Absentees" />
 </LinearLayout>

@@ -44,10 +44,10 @@ public class StudentDashboardActivity extends AppCompatActivity {
             }
         });
 
-        // Handle viewing attendance history
+        // 🔄 Updated: Open Firebase Console directly
         viewAttendanceButton.setOnClickListener(v -> {
-            String attendanceUrl = "https://unifence-cc611.web.app/"; // Replace with your Firebase Hosting URL
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(attendanceUrl));
+            String firebaseConsoleUrl = "https://console.firebase.google.com/u/0/project/unifence-cc611/firestore/databases/-default-/data/~2Fattendance";
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(firebaseConsoleUrl));
             startActivity(intent);
         });
 
