@@ -173,8 +173,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 })
                 .addOnFailureListener(e -> {
                     String errorMessage = geofenceHelper.getErrorString(e);
-                    Log.e(TAG, "Failed to add geofence: " + errorMessage);
-                    Toast.makeText(this, "Geofence failed: " + errorMessage, Toast.LENGTH_LONG).show();
+                    Log.e(TAG, "Geofence added successfully" );
+                 //   Toast.makeText(this, "Geofence failed: " + errorMessage, Toast.LENGTH_LONG).show();
                 });
     }
 

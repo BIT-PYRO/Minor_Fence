@@ -12,7 +12,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity {
-    private EditText emailInput, passwordInput;
+    private EditText nameInput, emailInput, passwordInput;
     private Button loginButton, signupButton;
     private ProgressBar progressBar;
     private FirebaseAuth mAuth;
@@ -25,6 +25,7 @@ public class LoginActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         // Initialize UI Elements
+        nameInput = findViewById(R.id.name_input);
         emailInput = findViewById(R.id.email_input);
         passwordInput = findViewById(R.id.password_input);
         loginButton = findViewById(R.id.login_button);
@@ -34,7 +35,7 @@ public class LoginActivity extends AppCompatActivity {
         // Check if user is already logged in
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
-            navigateToDashboard();
+            navigateToDashboard(""); // Passing empty name if already logged in
         }
 
         loginButton.setOnClickListener(v -> loginUser());
@@ -46,14 +47,22 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void loginUser() {
+        String name = nameInput.getText().toString().trim();
         String email = emailInput.getText().toString().trim();
         String password = passwordInput.getText().toString().trim();
+
+        if (name.isEmpty()) {
+            nameInput.setError("Name is required");
+            nameInput.requestFocus();
+            return;
+        }
 
         if (email.isEmpty()) {
             emailInput.setError("Email is required");
             emailInput.requestFocus();
             return;
         }
+
         if (password.isEmpty()) {
             passwordInput.setError("Password is required");
             passwordInput.requestFocus();
@@ -70,15 +79,16 @@ public class LoginActivity extends AppCompatActivity {
 
                     if (task.isSuccessful()) {
                         Toast.makeText(this, "Login Successful!", Toast.LENGTH_SHORT).show();
-                        navigateToDashboard();
+                        navigateToDashboard(name);
                     } else {
                         Toast.makeText(this, "Authentication Failed. Check credentials.", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
-    private void navigateToDashboard() {
+    private void navigateToDashboard(String name) {
         Intent intent = new Intent(LoginActivity.this, StudentDashboardActivity.class);
+        intent.putExtra("student_name", name);
         startActivity(intent);
         finish(); // Close LoginActivity
     }

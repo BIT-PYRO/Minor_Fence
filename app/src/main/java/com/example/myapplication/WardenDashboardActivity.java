@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
+import android.app.TimePickerDialog;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -36,6 +37,7 @@ public class WardenDashboardActivity extends AppCompatActivity {
         viewAttendanceButton = findViewById(R.id.view_attendance_button);
         setTimeButton = findViewById(R.id.set_time_button);
         viewAbsenteesButton = findViewById(R.id.view_absentees_button);
+        setTimeButton.setOnClickListener(v -> openTimePicker());
 
         geofenceButton.setOnClickListener(v -> {
             Intent intent = new Intent(WardenDashboardActivity.this, MapsActivity.class);
@@ -73,9 +75,19 @@ public class WardenDashboardActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Select Hostel");
 
+       // builder.setItems(hostelOptions, (dialog, which) -> {
+        //    selectedHostel = hostelOptions[which];
+         //   getAllStudents();
+       // });
         builder.setItems(hostelOptions, (dialog, which) -> {
             selectedHostel = hostelOptions[which];
-            getAllStudents();
+
+            // Build Firestore URL for absentees
+            String firebaseAbsenteeUrl = "https://console.firebase.google.com/u/0/project/unifence-cc611/firestore/databases/-default-/data/~2Fabsentees~2F" + selectedDate + "~2F" + selectedHostel;
+
+            // Open URL in browser
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(firebaseAbsenteeUrl));
+            startActivity(browserIntent);
         });
 
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
@@ -103,6 +115,57 @@ public class WardenDashboardActivity extends AppCompatActivity {
                         Toast.makeText(this, "Failed to fetch student list", Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+    private void openTimePicker() {
+        Calendar calendar = Calendar.getInstance();
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+
+        TimePickerDialog timePickerDialog = new TimePickerDialog(
+                WardenDashboardActivity.this,
+                (view, selectedHour, selectedMinute) -> {
+
+                    // Format time as HH:mm
+                    String formattedTime = String.format(Locale.getDefault(), "%02d:%02d", selectedHour, selectedMinute);
+
+                    // Ask for hostel before saving time
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setTitle("Select Hostel for Attendance Time");
+
+                    builder.setItems(hostelOptions, (dialog, which) -> {
+                        String hostel = hostelOptions[which];
+
+                        // Save to Firestore under 'settings' collection
+                        db.collection("settings")
+                                .document("attendance_time")
+                                .update(hostel, formattedTime)
+                                .addOnSuccessListener(aVoid -> {
+                                    Toast.makeText(this, "Attendance time set for " + hostel + ": " + formattedTime, Toast.LENGTH_SHORT).show();
+                                })
+                                .addOnFailureListener(e -> {
+                                    // If doc doesn't exist, create it
+                                    Map<String, Object> newData = new HashMap<>();
+                                    newData.put(hostel, formattedTime);
+                                    db.collection("settings")
+                                            .document("attendance_time")
+                                            .set(newData)
+                                            .addOnSuccessListener(aVoid -> {
+                                                Toast.makeText(this, "Attendance time set for " + hostel + ": " + formattedTime, Toast.LENGTH_SHORT).show();
+                                            })
+                                            .addOnFailureListener(error -> {
+                                                Toast.makeText(this, "Failed to set time: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                                                Log.e("SetTime", "Error saving time", error);
+                                            });
+                                });
+                    });
+
+                    builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
+                    builder.show();
+
+                }, hour, minute, true
+        );
+
+        timePickerDialog.show();
     }
 
     private void getAttendanceData(Map<String, String> allStudents) {

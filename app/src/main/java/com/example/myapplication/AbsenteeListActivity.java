@@ -1,17 +1,18 @@
 package com.example.myapplication;
 
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class AbsenteeListActivity extends AppCompatActivity {
 
@@ -21,8 +22,11 @@ public class AbsenteeListActivity extends AppCompatActivity {
     private List<String> absenteeNames = new ArrayList<>();
     private String TAG = "AbsenteeListActivity";
 
-    private String selectedDate;
     private String selectedHostel;
+    private Button selectDateButton;
+    private TextView dateTextView;
+
+    private Calendar today;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,23 +34,60 @@ public class AbsenteeListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_absentee_list);
 
         absenteeListView = findViewById(R.id.absentee_list_view);
+        selectDateButton = findViewById(R.id.select_date_button);
+        dateTextView = findViewById(R.id.date_text_view);
+
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, absenteeNames);
         absenteeListView.setAdapter(adapter);
 
         db = FirebaseFirestore.getInstance();
-
-        selectedDate = getIntent().getStringExtra("selectedDate");
         selectedHostel = getIntent().getStringExtra("selectedHostel");
 
-        if (selectedDate != null && selectedHostel != null) {
-            fetchPresentStudents();
-        } else {
-            Log.e(TAG, "Selected Date or Hostel is null!");
-            Toast.makeText(this, "Invalid date or hostel", Toast.LENGTH_SHORT).show();
+        if (selectedHostel == null) {
+            Toast.makeText(this, "Hostel not selected!", Toast.LENGTH_SHORT).show();
+            finish();
         }
+
+        today = Calendar.getInstance();
+        today.set(Calendar.HOUR_OF_DAY, 0);
+        today.set(Calendar.MINUTE, 0);
+        today.set(Calendar.SECOND, 0);
+        today.set(Calendar.MILLISECOND, 0);
+
+        selectDateButton.setOnClickListener(v -> showDatePicker());
     }
 
-    private void fetchPresentStudents() {
+    private void showDatePicker() {
+        Calendar initial = Calendar.getInstance();
+
+        DatePickerDialog dialog = new DatePickerDialog(
+                this,
+                (view, year, month, dayOfMonth) -> {
+                    Calendar picked = Calendar.getInstance();
+                    picked.set(year, month, dayOfMonth, 0, 0, 0);
+                    picked.set(Calendar.MILLISECOND, 0);
+
+                    if (picked.after(today)) {
+                        Toast.makeText(this, "Cannot select future dates!", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    String formattedDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(picked.getTime());
+                    dateTextView.setText("Selected Date: " + formattedDate);
+                    fetchPresentStudents(formattedDate);
+                },
+                initial.get(Calendar.YEAR),
+                initial.get(Calendar.MONTH),
+                initial.get(Calendar.DAY_OF_MONTH)
+        );
+
+        // Set maximum date to today
+        dialog.getDatePicker().setMaxDate(today.getTimeInMillis());
+        dialog.show();
+    }
+
+    private void fetchPresentStudents(String selectedDate) {
+        absenteeNames.clear();
         db.collection("attendance")
                 .document(selectedDate)
                 .collection(selectedHostel)
@@ -78,7 +119,7 @@ public class AbsenteeListActivity extends AppCompatActivity {
                     }
 
                     if (absenteeNames.isEmpty()) {
-                        absenteeNames.add("No absentees today!");
+                        absenteeNames.add("No absentees on this day!");
                     }
 
                     adapter.notifyDataSetChanged();

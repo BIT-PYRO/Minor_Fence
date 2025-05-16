@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -5,7 +6,6 @@
     android:padding="20dp"
     android:background="#FFFFFF">
 
-    <!-- Heading for Absentee List -->
     <TextView
         android:id="@+id/absentee_heading"
         android:layout_width="wrap_content"
@@ -17,7 +17,20 @@
         android:paddingBottom="10dp"
         android:textColor="#000000" />
 
-    <!-- ListView to show absentee students -->
+    <Button
+        android:id="@+id/select_date_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Select Date" />
+
+    <TextView
+        android:id="@+id/date_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="No date selected"
+        android:paddingTop="10dp"
+        android:textColor="#444444" />
+
     <ListView
         android:id="@+id/absentee_list_view"
         android:layout_width="match_parent"

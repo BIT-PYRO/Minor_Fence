@@ -1,4 +1,5 @@
 package com.example.myapplication;
+
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.ContextWrapper;
@@ -10,13 +11,15 @@ import com.google.android.gms.location.GeofenceStatusCodes;
 import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.maps.model.LatLng;
 
-public class GeofenceHelper extends ContextWrapper{
+public class GeofenceHelper extends ContextWrapper {
 
-    private static final String TAG="GeofenceHelper";
+    private static final String TAG = "GeofenceHelper";
     PendingIntent pendingIntent;
-    public GeofenceHelper(Context base){
+
+    public GeofenceHelper(Context base) {
         super(base);
     }
+
     public GeofencingRequest getGeofencingRequest(Geofence geofence) {
         return new GeofencingRequest.Builder()
                 .addGeofence(geofence)
@@ -38,23 +41,29 @@ public class GeofenceHelper extends ContextWrapper{
         if (pendingIntent != null) {
             return pendingIntent;
         }
+
         Intent intent = new Intent(this, GeofenceBroadcastReceiver.class);
-        pendingIntent = PendingIntent.getBroadcast(this, 2607, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        // ✅ Fix for Android 12 and above: use FLAG_IMMUTABLE with FLAG_UPDATE_CURRENT
+        pendingIntent = PendingIntent.getBroadcast(
+                this,
+                2607,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+        );
 
         return pendingIntent;
     }
+
     public String getErrorString(Exception e) {
         if (e instanceof ApiException) {
             ApiException apiException = (ApiException) e;
             switch (apiException.getStatusCode()) {
-                case GeofenceStatusCodes
-                             .GEOFENCE_NOT_AVAILABLE:
+                case GeofenceStatusCodes.GEOFENCE_NOT_AVAILABLE:
                     return "GEOFENCE_NOT_AVAILABLE";
-                case GeofenceStatusCodes
-                             .GEOFENCE_TOO_MANY_GEOFENCES:
+                case GeofenceStatusCodes.GEOFENCE_TOO_MANY_GEOFENCES:
                     return "GEOFENCE_TOO_MANY_GEOFENCES";
-                case GeofenceStatusCodes
-                             .GEOFENCE_TOO_MANY_PENDING_INTENTS:
+                case GeofenceStatusCodes.GEOFENCE_TOO_MANY_PENDING_INTENTS:
                     return "GEOFENCE_TOO_MANY_PENDING_INTENTS";
             }
         }
